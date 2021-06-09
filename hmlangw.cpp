@@ -31,7 +31,7 @@
 #include <sys/eventfd.h>
 //#include <sys/time.h>
 #include <sys/types.h>
-#include <sys/poll.h>
+#include <poll.h>
 #include <signal.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
