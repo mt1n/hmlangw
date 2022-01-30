@@ -1,8 +1,8 @@
 #CC	= gcc-4.6
-#CC = gcc
+CC = gcc
 
 #CFLAGS	= -O2 -Wall -Wno-deprecated
-#CFLAGS	= -O2 -pipe -Wall
+CFLAGS	= -O2 -pipe -Wall
 #CFLAGS	= -Wall -O2 -pipe -march=armv6j -mtune=arm1176jzf-s -mfpu=vfp -mfloat-abi=hard
 CFLAGS ?= -Wall -Wextra -Werror
 
@@ -10,7 +10,8 @@ all: hmlangw
 
 
 hmlangw:	hmlangw.o hmframe.o
-	$(CC) -o hmlangw hmlangw.o hmframe.o -lpthread
+#	$(CC) -o hmlangw hmlangw.o hmframe.o -lpthread
+	$(CC) -o hmlangw hmlangw.o hmframe.o
     
 #	$(CC) -o hmlangw hmlangw.o hmframe.o -lutil -lpthread -lrt -lm -lstdc++
 
