@@ -326,8 +326,21 @@ static void * keepAliveThreadFunc(void *x)
                         {
                             keepaliveCount = counter;
                         }
-                        else
-                        {
+                        else if ( letter == '>' )
+			{
+				if( sscanf( buffer, ">%x,%d", &index, &number ) == 2 )
+                    		{
+                        		if( index == (int)messageCounter && number == 0 )
+                        		{
+                            			synched = true;
+                            			/* Flush anything already in the serial buffer */
+                            			tcflush(g_serialFd, TCIFLUSH);
+                            			g_inBootloader = false;
+                        		}
+                    		}
+			}
+			else
+			{
                             keepaliveCount++;
                             if( counter != keepaliveCount )
                             {
