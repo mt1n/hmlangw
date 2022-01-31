@@ -54,6 +54,8 @@ static int g_resetFileFd = -1;
 static bool g_debug = false;
 static bool g_inBootloader = false;
 
+bool synched = false;
+
 //const char *g_productString = "01,eQ3-HM-LGW,1.1.4,ABC0123456";
 
 #define VERSION "0.0.2"
@@ -317,7 +319,7 @@ static void * keepAliveThreadFunc(void *x)
                 if( g_debug )
                     fprintf( stderr,  "received %d bytes: %s\n", r, buffer );
                 char letter = buffer[0];
-                if( letter == 'L' || letter == 'K' )
+                if( letter == 'L' || letter == 'K' || letter == '>' )
                 {
                     int counter;
                     if( 1 == sscanf( &buffer[1], "%x", &counter ) )
@@ -328,6 +330,12 @@ static void * keepAliveThreadFunc(void *x)
                         }
                         else if ( letter == '>' )
 			{
+				int index, number;
+                                if( g_debug )
+                                {
+                                        fprintf( stderr,  "sync data: %s\n", buffer );
+                                }
+
 				if( sscanf( buffer, ">%x,%d", &index, &number ) == 2 )
                     		{
                         		if( index == (int)messageCounter && number == 0 )
@@ -336,6 +344,7 @@ static void * keepAliveThreadFunc(void *x)
                             			/* Flush anything already in the serial buffer */
                             			tcflush(g_serialFd, TCIFLUSH);
                             			g_inBootloader = false;
+						writeall( g_serialFd, enterNormalMode, sizeof( enterNormalMode ) );
                         		}
                     		}
 			}
@@ -477,7 +486,7 @@ static void * bidcosThreadFunc(void *x)
                 {
                     shutdownAndCloseSocket( &sock );
                 }
-		writeall( g_serialFd, enterNormalMode, sizeof( enterNormalMode ) );
+//		writeall( g_serialFd, enterNormalMode, sizeof( enterNormalMode ) );
             }
         }
         
@@ -555,6 +564,7 @@ static void * bidcosThreadFunc(void *x)
                             /* Flush anything already in the serial buffer */
                             tcflush(g_serialFd, TCIFLUSH);
                             g_inBootloader = false;
+			    writeall( g_serialFd, enterNormalMode, sizeof( enterNormalMode ) );
                         }
                     }
                 }
