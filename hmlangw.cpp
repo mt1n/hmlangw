@@ -60,6 +60,8 @@ static bool g_inBootloader = false;
 static char *g_address=NULL;
 static const char *g_productString = "01,Revilo-HM-LGW," VERSION ",%s\r\n";
 
+static const unsigned char enterNormalMode[] = {0xfd,0x00,0x03,0x00,0x05,0x03,0x06,0x0a};
+
 static char* create_hex_string( const char* source, int length, char* target, int size )
 	{
 	char* current;
@@ -462,6 +464,7 @@ static void * bidcosThreadFunc(void *x)
                 {
                     shutdownAndCloseSocket( &sock );
                 }
+		writeall( g_serialFd, enterNormalMode, sizeof( enterNormalMode ) );
             }
         }
         
